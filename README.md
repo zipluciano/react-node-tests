@@ -1,3 +1,3 @@
 # React + Node integrations
 
-Este repo destina-se a testes com React e Node. O foco é aprender sobre REST APIs em Node, e como interagir com React.
+This repo is for testing with React and Node. The focus is on learning about REST APIs in Node, and how to interact with React.
