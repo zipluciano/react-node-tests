@@ -22,12 +22,12 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-	res.status(200).json({ message: 'Simple Form' });
+	res.status(200).json({ message: 'Message from API - GET request' });
 });
 
 app.post('/name', (req, res) => {
-	const { name } = req.body;
-	res.status(201).json({ message: name });
+	console.log(req.body);
+	res.status(201).json({ message: 'received data' });
 });
 
 app.listen(port, () => {
