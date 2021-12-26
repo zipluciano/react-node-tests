@@ -4,30 +4,23 @@ const dotenv = require('dotenv').config();
 const app = express();
 const port = dotenv.parsed.PORT;
 
+const origin = ['http://localhost:3333', `http://localhost:${port}/`];
+const options = {
+	methods: ['GET', 'POST'],
+	origin: origin,
+};
+
 app.use(express.json());
-
-// Configs for CORS, but not working
-// const origins = [
-// 	`http://localhost:${port}`,
-// 	`http://localhost:${port}/`,
-// 	`http://localhost:${port}/name`,
-// ];
-// const options = {
-// 	origin: origins,
-// 	methods: ['GET', 'POST'],
-// };
-// Tried this
-// app.use(cors(options))
-
-app.use(cors());
+// app.use(cors(options));
 
 app.get('/', (req, res) => {
-	res.status(200).json({ message: 'Simple Form' });
+	res.status(200).send('Hello World from BackEnd');
 });
 
-app.post('/name', (req, res) => {
-	const { name } = req.body;
-	res.status(201).json({ message: name });
+app.post('/texts', cors(options), (req, res) => {
+	const { texts } = req.body;
+	console.log(texts);
+	res.status(201).send(texts);
 });
 
 app.listen(port, () => {

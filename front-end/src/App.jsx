@@ -1,44 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function App() {
-	const [get, setGet] = React.useState('');
-	const [response, setResponse] = React.useState('');
-	const [value, setValue] = React.useState('');
-	const port = process.env.REACT_APP_PORT;
-	const url = `http://localhost:${port}/`;
+const url = `http://localhost:${process.env.REACT_APP_PORT}/`;
 
-	async function handleSubmit(event) {
-		event.preventDefault();
-		axios
-			.post(url + 'name', {
-				name: value,
-			})
-			.then((res) => setResponse(res.status));
+function App() {
+	const [greeting, setGreeting] = useState('Hello from useState');
+	const [inputData, setInputData] = useState('');
+	const [responseText, setResponseText] = useState('');
+
+	async function loadGreeting(path) {
+		await axios({
+			method: 'get',
+			url: path,
+		}).then((res) => setGreeting(res.data));
 	}
 
-	React.useEffect(() => {
-		try {
-			axios.get(url).then((res) => setGet(res.data.message));
-		} catch (error) {
-			console.log(error);
-		}
-	});
+	async function handleSubmit(e) {
+		e.preventDefault();
+		const header = {
+			method: 'post',
+			url: `${url}texts`,
+			data: {
+				texts: inputData,
+			},
+		};
+		await axios(header).then((res) => setResponseText(res.data));
+	}
+
+	useEffect(() => {
+		loadGreeting(url);
+	}, []);
 
 	return (
 		<div className='App'>
-			<h1>{get}</h1>
-			<form action='POST' onSubmit={handleSubmit}>
+			<h3>{greeting}</h3>
+			<form method='post' onSubmit={handleSubmit}>
+				<label htmlFor='text'>Type some text</label>
+				<br />
 				<input
 					type='text'
-					value={value}
-					onChange={(event) => setValue(event.target.value)}
+					name='text'
+					id='text'
+					onChange={(e) => setInputData(e.target.value)}
 				/>
-				<button type='submit'>Send Message</button>
+				<button type='submit'>Send Data</button>
 			</form>
-			<div style={{ color: 'green' }}>
-				{response && `Your data was sended to server. Status code: ${response}`}
-			</div>
+			<h3>{responseText}</h3>
 		</div>
 	);
 }
